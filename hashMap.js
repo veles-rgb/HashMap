@@ -6,6 +6,7 @@ class HashMap {
         this.loadFactor = loadFactor;
         this.capacity = capacity;
         this.buckets = new Array(this.capacity);
+        this.count = 0;
     }
 
     hash(key) {
@@ -19,23 +20,30 @@ class HashMap {
 
     set(key, value) {
         let index = this.hash(key);
+
+        if (index < 0 || index >= this.capacity) {
+            throw new Error("Trying to access index out of bounds");
+        }
+
         if (!this.buckets[index]) {
             // If the key does not exist (create new linked list with new node)
             this.buckets[index] = new LinkedList();
             this.buckets[index].prepend(key, value);
-            return `Added: ${key}:${value}\n`;
+            this.count++;
         } else {
             let nodeIndex = this.buckets[index].find(key);
             let node = this.buckets[index].at(nodeIndex);
-            if (node.key !== key) {
+            if (node === null || node.key !== key) {
                 // If the index exists but the key does not (add to linked list)
                 this.buckets[index].prepend(key, value);
-                return `Added: ${key}:${value} (collision avoided)\n`;
+                this.count++;
             } else {
                 // If the index and key exists (update value)
                 node.value = value;
-                return `Updated: key "${key}" with value "${value}"\n`;
             }
+        }
+        if (this.count / this.capacity > this.loadFactor) {
+            this.resize();
         }
     }
 
@@ -109,6 +117,25 @@ class HashMap {
             }
         });
         return entriesArr;
+    }
+
+    resize() {
+        console.log(`Resizing from capacity ${this.capacity} to ${this.capacity * 2}...`);
+        const oldBuckets = this.buckets;
+        this.capacity *= 2;
+        this.buckets = new Array(this.capacity);
+        this.count = 0;
+
+        oldBuckets.forEach(bucket => {
+            if (bucket) {
+                let currentNode = bucket.head;
+                while (currentNode !== null) {
+                    this.set(currentNode.key, currentNode.value);
+                    currentNode = currentNode.nextNode;
+                }
+            }
+        });
+        console.log(`Resize complete. New capacity: ${this.capacity}`);
     }
 }
 
