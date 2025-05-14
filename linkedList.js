@@ -174,6 +174,36 @@ class LinkedList {
             return `Removed "${removedNode}" at index ${index}.`;
         }
     }
+
+    getKeys() {
+        const keys = [];
+        let currentNode = this.head;
+        while (currentNode !== null) {
+            keys.push(currentNode.key);
+            currentNode = currentNode.nextNode;
+        }
+        return keys;
+    }
+
+    getValues() {
+        const values = [];
+        let currentNode = this.head;
+        while (currentNode !== null) {
+            values.push(currentNode.value);
+            currentNode = currentNode.nextNode;
+        }
+        return values;
+    }
+
+    getInfo() {
+        const info = [];
+        let currentNode = this.head;
+        while (currentNode !== null) {
+            info.push(`${currentNode.key}, ${currentNode.value}`);
+            currentNode = currentNode.nextNode;
+        }
+        return info;
+    }
 }
 
 class Node {

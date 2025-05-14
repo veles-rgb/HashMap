@@ -80,6 +80,36 @@ class HashMap {
         this.capacity = 16;
         return this.buckets;
     }
+
+    keys() {
+        const keysArr = [];
+        this.buckets.forEach(bucket => {
+            if (bucket) {
+                keysArr.push(...bucket.getKeys());
+            }
+        });
+        return keysArr;
+    }
+
+    values() {
+        const valuesArr = [];
+        this.buckets.forEach(bucket => {
+            if (bucket) {
+                valuesArr.push(...bucket.getValues());
+            }
+        });
+        return valuesArr;
+    }
+
+    entries() {
+        const entriesArr = [];
+        this.buckets.forEach(bucket => {
+            if (bucket) {
+                entriesArr.push(...bucket.getInfo());
+            }
+        });
+        return entriesArr;
+    }
 }
 
 export { HashMap };

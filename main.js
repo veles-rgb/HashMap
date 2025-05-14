@@ -16,4 +16,6 @@ test.set('jacket', 'blue');
 test.set('kite', 'pink');
 test.set('lion', 'golden');
 
+console.log(test.entries());
+
 // DON'T FORGET TO UPDATE CAPACITY
