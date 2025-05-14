@@ -29,17 +29,13 @@ class LinkedList {
     }
 
     size() {
-        if (this.head === null) {
-            return "Empty list!";
-        } else {
-            let count = 1;
-            let currentNode = this.head;
-            while (currentNode.nextNode !== null) {
-                currentNode = currentNode.nextNode;
-                count++;
-            }
-            return count;
+        let count = 0;
+        let currentNode = this.head;
+        while (currentNode !== null) {
+            count++;
+            currentNode = currentNode.nextNode;
         }
+        return count;
     }
 
     getHead() {
@@ -64,14 +60,12 @@ class LinkedList {
 
     at(index) {
         let currentNode = this.head;
-        for (let i = 0; i < index; i++) {
+        let i = 0;
+        while (currentNode !== null && i < index) {
             currentNode = currentNode.nextNode;
+            i++;
         }
-        if (currentNode === null) {
-            return "Invalid index";
-        } else {
-            return currentNode;
-        }
+        return currentNode;
     }
 
     pop() {
