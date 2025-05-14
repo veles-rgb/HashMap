@@ -64,16 +64,13 @@ class LinkedList {
 
     at(index) {
         let currentNode = this.head;
-        if (index === 0) {
-            return "Invalid Index. Please start at 1.";
-        }
-        for (let i = 1; i < index; i++) {
+        for (let i = 0; i < index; i++) {
             currentNode = currentNode.nextNode;
         }
         if (currentNode === null) {
-            return "Invalid index. Use size() to see the length of the list.";
+            return "Invalid index";
         } else {
-            return currentNode.key, currentNode.value;
+            return currentNode;
         }
     }
 
@@ -103,13 +100,15 @@ class LinkedList {
 
     find(key) {
         let currentNode = this.head;
+        let index = 0;
         while (currentNode !== null) {
             if (currentNode.key === key) {
-                return currentNode;
+                return index;
             }
             currentNode = currentNode.nextNode;
+            index++;
         }
-        return false;
+        return null;
     }
 
     toString() {
@@ -156,20 +155,20 @@ class LinkedList {
     }
 
     removeAt(index) {
-        if (index === 0 || index > this.size()) {
-            return `Invalid index. Please use 1-${this.size()}.`;
-        } else if (index === 1) {
+        if (index > this.size()) {
+            return `Invalid index. Please use 0-${this.size()}.`;
+        } else if (index === 0) {
             let currentNode = this.head;
             this.head = this.head.nextNode;
-            return `Removed "${currentNode.value}" at index ${index}.`;
+            return `Removed "${currentNode.key}" at index ${index}.`;
         } else {
             let currentNode = this.head;
             let previousNode;
-            for (let i = 1; i < index; i++) {
+            for (let i = 0; i < index; i++) {
                 previousNode = currentNode;
                 currentNode = currentNode.nextNode;
             }
-            const removedNode = previousNode.nextNode.value;
+            const removedNode = previousNode.nextNode.key;
             previousNode.nextNode = currentNode.nextNode;
             currentNode = null;
             return `Removed "${removedNode}" at index ${index}.`;

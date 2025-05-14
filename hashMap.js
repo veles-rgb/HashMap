@@ -2,11 +2,10 @@
 import { LinkedList } from "./linkedList.js";
 
 class HashMap {
-    constructor(loadFactor, capacity = 16) {
+    constructor(loadFactor = 0.75, capacity = 16) {
         this.loadFactor = loadFactor;
         this.capacity = capacity;
         this.buckets = new Array(this.capacity);
-        this.keyCount = 0;
     }
 
     hash(key) {
@@ -20,27 +19,67 @@ class HashMap {
 
     set(key, value) {
         let index = this.hash(key);
-
         if (!this.buckets[index]) {
+            // If the key does not exist (create new linked list with new node)
             this.buckets[index] = new LinkedList();
             this.buckets[index].prepend(key, value);
             return `Added: ${key}:${value}\n`;
         } else {
-            // If the key is different add it to the LinkedList
-            if (this.buckets[index].find(key) === false) {
-                this.buckets[index].prepend(value, key);
-                return `Added: ${key}:${value} (collision handled)`;
+            let nodeIndex = this.buckets[index].find(key);
+            let node = this.buckets[index].at(nodeIndex);
+            if (node.key !== key) {
+                // If the index exists but the key does not (add to linked list)
+                this.buckets[index].prepend(key, value);
+                return `Added: ${key}:${value} (collision avoided)\n`;
             } else {
-                // If the key is the same change the value
-                this.buckets[index].find(key).value = value;
-                return `Updated: ${key} with new value: ${value}`;
+                // If the index and key exists (update value)
+                node.value = value;
+                return `Updated: key "${key}" with value "${value}"\n`;
             }
         }
     }
 
     get(key) {
         let index = this.hash(key);
+        if (this.buckets[index]) {
+            let nodeIndex = this.buckets[index].find(key);
+            let node = this.buckets[index].at(nodeIndex);
+            if (node) return node.value;
+        } else {
+            return null;
+        }
+    }
+
+    has(key) {
+        let index = this.hash(key);
+        if (!this.buckets[index]) return false;
+        return this.buckets[index].find(key) !== null;
+    }
+
+    remove(key) {
+        let index = this.hash(key);
+        if (!this.has(key)) return false;
+        let nodeIndex = this.buckets[index].find(key);
+        if (nodeIndex !== null) {
+            this.buckets[index].removeAt(nodeIndex);
+            return true;
+        }
+        return false;
+    }
+
+    length() {
+        let size = 0;
+        this.buckets.forEach(bucket => {
+            size += bucket.size();
+        });
+        return size;
+    }
+
+    clear() {
+        this.buckets.length = 0;
+        this.capacity = 16;
+        return this.buckets;
     }
 }
 
-export { HashMap };;
+export { HashMap };
