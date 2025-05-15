@@ -49,13 +49,10 @@ class HashMap {
 
     get(key) {
         let index = this.hash(key);
-        if (this.buckets[index]) {
-            let nodeIndex = this.buckets[index].find(key);
-            let node = this.buckets[index].at(nodeIndex);
-            if (node) return node.value;
-        } else {
-            return null;
-        }
+        if (!this.buckets[index]) return null;
+        const nodeIndex = this.buckets[index].find(key);
+        const node = this.buckets[index].at(nodeIndex);
+        return node ? node.value : null;
     }
 
     has(key) {
@@ -76,17 +73,13 @@ class HashMap {
     }
 
     length() {
-        let size = 0;
-        this.buckets.forEach(bucket => {
-            size += bucket.size();
-        });
-        return size;
+        return this.count;
     }
 
     clear() {
-        this.buckets.length = 0;
+        this.buckets = new Array(16);
         this.capacity = 16;
-        return this.buckets;
+        this.count = 0;
     }
 
     keys() {
